@@ -1,4 +1,5 @@
 from ultralytics import YOLOv10
+import os
 # from ultralytics import YOLOWorld
 import torch
 
@@ -15,5 +16,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # for other usages past here the path to the last training
 model = YOLOv10.from_pretrained('jameslahm/yolov10s').to(device)
 
-# Train the model on the COCO8 example dataset for 100 epochs
-results = model.train(data="lvis.yaml", epochs=4, imgsz=224, fraction=0.2)
+
+cur_dir = os.path.dirname(os.path.realpath(__file__))
+
+results = model.train(data=os.path.join(cur_dir, 'deepscore.yaml'), epochs=1, imgsz=320, fraction=0.2)
