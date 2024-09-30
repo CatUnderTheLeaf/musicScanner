@@ -9,19 +9,49 @@ print(torch.version.cuda)
 print(torch.cuda.is_available())
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
+imgsz = 640
+
+# !!! very important
+# otherwise there is numpy error
+# pip install albumentations==1.4
+from ultralytics.data.augment import Albumentations
+from ultralytics.utils import LOGGER, colorstr
+
+def __init__(self, p=1.0):
+        """Initialize the transform object for YOLO bbox formatted params."""
+        self.p = p
+        self.transform = None
+        prefix = colorstr("albumentations: ")
+        try:
+            import albumentations as A         
+
+            # Insert required transformation here
+            T = [
+                A.RandomCrop(height=imgsz, width=imgsz, p=0.1)
+                ]
+            self.transform = A.Compose(T, bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
+
+            LOGGER.info(prefix + ", ".join(f"{x}".replace("always_apply=False, ", "") for x in T if x.p))
+        except ImportError:  # package not installed, skip
+            pass
+        except Exception as e:
+            LOGGER.info(f"{prefix}{e}")
+
+Albumentations.__init__ = __init__
+
 
 # Load a pretrained YOLOv8s-worldv2 model
 # for the first usage:
 # model_last_weights = "yolov8s-worldv2.pt"
 # model = YOLOv10.from_pretrained('jameslahm/yolov10n').to(device)
 # for other usages past here the path to the last training
-model_weights = '/home/cat/projects/musicScanner/runs/detect/train/weights/best.pt'
+model_weights = '/home/cat/projects/musicScanner/runs/detect/train8/weights/last.pt'
 model = YOLOv10(model_weights).to(device)
 
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 
-results = model.train(data=os.path.join(cur_dir, 'deepscore.yaml'), epochs=100, batch=1, imgsz=1024)
+results = model.train(data=os.path.join(cur_dir, 'deepscore.yaml'), cfg=os.path.join(cur_dir, 'config.yaml'), augment = True, epochs=50, resume=True)
 
 
 # dfl_loss, it stands for "distribution focal loss", 

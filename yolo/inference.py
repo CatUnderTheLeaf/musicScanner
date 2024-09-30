@@ -13,7 +13,7 @@ print(torch.version.cuda)
 print(torch.cuda.is_available())
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-model_weights = '/home/cat/projects/musicScanner/runs/detect/train/weights/best.pt'
+model_weights = '/home/cat/projects/musicScanner/runs/detect/train8/weights/best.pt'
 model = YOLOv10(model_weights).to(device)
 print(model.device.type)
 source = image_dir+'/lg-3948783-aug-gonville--page-1.png'
@@ -23,11 +23,11 @@ save = True
 
 
 results = model.predict(source=source, stream=stream, save=save, conf=0.01)
-for result in results:
-    det_annotated = result.plot(show=False)
-    # det_annotated[0].verbose()
-    cv2.imshow('image', det_annotated)
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-      cv2.destroyAllWindows()
-      break 
+# for result in results:
+#     det_annotated = result.plot(show=False)
+#     # det_annotated[0].verbose()
+#     cv2.imshow('image', det_annotated)
+#     if cv2.waitKey(25) & 0xFF == ord('q'):
+#       cv2.destroyAllWindows()
+#       break 
 
