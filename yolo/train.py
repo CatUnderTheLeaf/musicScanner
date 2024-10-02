@@ -45,13 +45,13 @@ Albumentations.__init__ = __init__
 # model_last_weights = "yolov8s-worldv2.pt"
 # model = YOLOv10.from_pretrained('jameslahm/yolov10n').to(device)
 # for other usages past here the path to the last training
-model_weights = '/home/cat/projects/musicScanner/runs/detect/train8/weights/last.pt'
+model_weights = '/home/cat/projects/musicScanner/runs/detect/train3/weights/best.pt'
 model = YOLOv10(model_weights).to(device)
 
 
 cur_dir = os.path.dirname(os.path.realpath(__file__))
 
-results = model.train(data=os.path.join(cur_dir, 'deepscore.yaml'), cfg=os.path.join(cur_dir, 'config.yaml'), augment = True, epochs=50, resume=True)
+results = model.train(data=os.path.join(cur_dir, 'deepscore.yaml'), cfg=os.path.join(cur_dir, 'config.yaml'), augment = True, epochs=50, time=2.0)
 
 
 # dfl_loss, it stands for "distribution focal loss", 
