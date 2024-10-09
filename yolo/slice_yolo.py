@@ -73,4 +73,65 @@ def slice_yolo_ds(input_dir, output_dir, imgsz, min_area_ratio=0.1):
                     f.writelines(new_ann)
         
 
-slice_yolo_ds(ds_dir, output_dir, imgsz)
+# slice_yolo_ds(ds_dir, output_dir, imgsz)
+
+import os
+from pathlib import Path
+
+def get_file_stems(directory):
+    """
+    Get the stems of files in a directory with the given extensions.
+    
+    :param directory: Path to the directory to search.
+    :param extensions: List of file extensions to consider (e.g., ['.jpg', '.txt']).
+    :return: A set of file stems.
+    """
+    stems = set()
+    stems.update([Path(file).stem for file in os.listdir(directory)])
+    return stems
+
+def find_unmatched_files(dir1, dir2):
+    """
+    Compare two directories and find which files in one directory are not in the other (by stem).
+    
+    :param dir1: Path to the first directory.
+    :param dir2: Path to the second directory.
+    :return: set containing unmatched file stems from each directory.
+    """
+    # Get stems from both directories
+    stems_dir1 = get_file_stems(dir1)
+    stems_dir2 = get_file_stems(dir2)
+
+    # Find unmatched stems
+    unmatched_in_dir1 = stems_dir1 - stems_dir2
+
+    return unmatched_in_dir1
+
+dir1 = os.path.join(output_dir, 'images')
+dir2 = os.path.join(output_dir, 'labels')
+l = [os.path.join(output_dir, 'images', x+'.png') for x in find_unmatched_files(dir1, dir2)]
+
+# for item in l:
+#     os.remove(item)
+
+from random import shuffle
+
+def save_ds_file(dir, list, name):
+    with open(os.path.join(dir, name + ".txt"), 'w') as f:
+        for x in list:
+            f.write('./images/'+x+'\n')
+
+def split_files(dir):
+    dir1 = os.path.join(dir, 'images')
+    stems_dir1 = get_file_stems(dir1)
+    new_l = [x+'.png' for x in stems_dir1]
+    shuffle(new_l)
+    
+    training = new_l[:int(len(new_l)*0.7)]
+    validation = new_l[int(len(new_l)*0.7):int(len(new_l)*0.9)]
+    testing = new_l[int(len(new_l)*0.9):]
+    save_ds_file(dir, training, 'train')
+    save_ds_file(dir, validation, 'val')
+    save_ds_file(dir, testing, 'test')
+    
+split_files(output_dir)
