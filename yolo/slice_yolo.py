@@ -73,7 +73,7 @@ def slice_yolo_ds(input_dir, output_dir, imgsz, min_area_ratio=0.1):
                     f.writelines(new_ann)
         
 
-# slice_yolo_ds(ds_dir, output_dir, imgsz)
+slice_yolo_ds(ds_dir, output_dir, imgsz)
 
 import os
 from pathlib import Path
