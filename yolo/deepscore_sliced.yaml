@@ -137,5 +137,5 @@ names:
   135: ottavaBracket
 path: /home/cat/projects/musicScanner/dataset/deepscore_sliced
 test: test.txt
-train: val.txt
-val: train.txt
+train: train.txt
+val: val.txt

@@ -13,7 +13,8 @@ print(torch.version.cuda)
 print(torch.cuda.is_available())
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-model_weights = '/home/cat/projects/musicScanner/runs/detect/train10/weights/best.pt'
+train_num = 'train25'
+model_weights = '/home/cat/projects/musicScanner/runs/detect/'+train_num+'/weights/best.pt'
 # model = YOLOv10(model_weights).to(device)
 # print(model.device.type)
 # source = image_dir+'/lg-2267728-aug-beethoven--page-2.png_512_2048_1152_2688.png'
@@ -39,7 +40,7 @@ image_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file
 source = image_dir+'/lg-2267728-aug-beethoven--page-2.png'
 detection_model = Yolov10DetectionModel(
     model_path=model_weights,
-    confidence_threshold=0.1,
+    confidence_threshold=0.3,
     device="cuda:0", # 'cpu' or 'cuda:0'
 )
 
@@ -50,7 +51,7 @@ result = get_sliced_prediction(
     slice_height = 640,
     slice_width = 640,
     overlap_height_ratio = 0.2,
-    overlap_width_ratio = 0.2
+    overlap_width_ratio = 0.3
 )
 # result = get_prediction(source, detection_model)
-result.export_visuals(export_dir="results/", hide_labels=True, rect_th=2, text_size=1)
+result.export_visuals(export_dir="results/", hide_labels=True, rect_th=2, text_size=1, file_name=train_num)

@@ -45,7 +45,8 @@ from ultralytics.utils import LOGGER, colorstr
 # model_last_weights = "yolov8s-worldv2.pt"
 # model = YOLOv10.from_pretrained('jameslahm/yolov10n').to(device)
 # for other usages past here the path to the last training
-model_weights = '/home/cat/projects/musicScanner/runs/detect/train9/weights/last.pt'
+train_num = 'train24'
+model_weights = '/home/cat/projects/musicScanner/runs/detect/'+train_num+'/weights/best.pt'
 model = YOLOv10(model_weights).to(device)
 
 
@@ -53,7 +54,7 @@ cur_dir = os.path.dirname(os.path.realpath(__file__))
 
 # results = model.train(data=os.path.join(cur_dir, 'deepscore.yaml'), cfg=os.path.join(cur_dir, 'config.yaml'), augment = True, epochs=50, time=2.0)
 
-results = model.train(data=os.path.join(cur_dir, 'deepscore_sliced.yaml'), cfg=os.path.join(cur_dir, 'config.yaml'), epochs=10, time=2.0)
+results = model.train(data=os.path.join(cur_dir, 'deepscore_sliced.yaml'), cfg=os.path.join(cur_dir, 'config.yaml'), epochs=20, time=4.0)
 
 
 # dfl_loss, it stands for "distribution focal loss", 
