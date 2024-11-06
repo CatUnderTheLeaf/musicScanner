@@ -22,7 +22,6 @@ Other [datasets](https://apacha.github.io/OMR-Datasets/).
 #### obb_anns
 A toolkit for convenient loading and inspection of the data was [copied](https://github.com/yvan674/obb_anns) and I have made changes, because some of the external libraries have deprecated functions.
 
-
 ### Data preparation
 I decided to try YOLOv10, because it was the latest model at the start of this project and it eliminates the need for non-maximum suppression (NMS) during inference, which reduces latency by up to 30%.
 
@@ -63,5 +62,9 @@ I trained my object detector for 163 epochs, it has a 0.74 mAP50 and 0.54 mAP50-
 
 I used `get_sliced_prediction` from `sahi` with 640x640 slice size and 0.2 overlap ratio. Currently `sahi` is not compatible with YOLOv10, so I added custom `Yolov10DetectionModel`. Here is an inference image example with 0.4 confidence threshold:
 ![inference results](/results/train25.png)
+
+### Model
+
+Model is open to public at [Roboflow](https://universe.roboflow.com/catundertheleaf/musicscanner/model/2), works on images with 640x640 size. To use it with SAHI slicer here is a [Roboflow workflow](https://app.roboflow.com/workflows/embed/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3b3JrZmxvd0lkIjoiY1lUVDlxQkU3V2JoUnNPSTN3RzkiLCJ3b3Jrc3BhY2VJZCI6ImJmb3hjbEViWjNTTml1RU9Db0YzVE9na3hSNjMiLCJ1c2VySWQiOiJiZm94Y2xFYlozU05pdUVPQ29GM1RPZ2t4UjYzIiwiaWF0IjoxNzMwOTExNjAzfQ.vorpFY3vzBu4ykAU06hFvMuW6Zq9ZIjkWrBRnoJZDBQ).
 
 [^1]: L. Tuggener, Y. P. Satyawan, A. Pacha, J. Schmidhuberand T. Stadelmann, “DeepScoresV2”. Zenodo, Sep. 02, 2020. doi: 10.5281/zenodo.4012193.
