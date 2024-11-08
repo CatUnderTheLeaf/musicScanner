@@ -25,7 +25,7 @@ def main():
 
     sliced_staffs = detector.slice_image(detections, divider='staff')
     for staff in sliced_staffs:
-        visual_staff = detector.visualize_predictions(staff['image'], staff['predictions'], filter=classes_to_view, hide_labels=False, rect_th=2, text_size=1)
+        visual_staff = detector.visualize_predictions(staff['image'], staff['predictions'], hide_labels=False, rect_th=2, text_size=1) # , filter=classes_to_view
         st.image(visual_staff, caption)
         st.divider()
         
