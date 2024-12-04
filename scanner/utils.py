@@ -7,7 +7,7 @@ from pdf2image import convert_from_path, convert_from_bytes
 def load_test_image():
     file_name = 'Poker Face Fl 2.pdf'
     # file_name = 'lg-2267728-aug-beethoven--page-2.png' 
-    test_im_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'results', file_name)
+    test_im_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'test_data', file_name)
     img_file = convert_from_path(test_im_path)[0]
     test_image = np.array(img_file)
     return test_image
