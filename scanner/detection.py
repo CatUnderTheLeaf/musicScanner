@@ -2,7 +2,7 @@ from sahi.predict import get_sliced_prediction
 from sahi.prediction import PredictionResult, ObjectPrediction
 from sahi.postprocess.combine import GreedyNMMPostprocess
 from sahi.utils.cv import visualize_object_predictions
-from .yolo10_sahi_detection_model import Yolov10DetectionModel
+from yolo10_sahi_detection_model import Yolov10DetectionModel
 import torch
 import numpy as np
 import os
@@ -93,6 +93,9 @@ def filter_predictions(prediction_list, classes_to_view):
 def compare_boxes_vertically(obj1:ObjectPrediction, obj2:ObjectPrediction):
     return obj1.bbox.to_xyxy()[1] - obj2.bbox.to_xyxy()[1]
 
+def compare_boxes_horizontally(obj1:ObjectPrediction, obj2:ObjectPrediction):
+    return obj1.bbox.to_xyxy()[0] - obj2.bbox.to_xyxy()[0]
+
 def get_mid_lines(sorted_staffs:List[ObjectPrediction]):
     lines = []
     for i in range(len(sorted_staffs)-1):
@@ -138,20 +141,28 @@ def transform_prediction(prediction: ObjectPrediction, slice_bbox: List[int]):
     prediction.bbox.miny = prediction.bbox.miny - slice_bbox[1]
     prediction.bbox.maxy = prediction.bbox.maxy - slice_bbox[1]    
 
+def postprocess(data, match_threshold=0.1, match_metric="IOU", class_agnostic=False):
+    postprocess = GreedyNMMPostprocess(
+        match_threshold=match_threshold,
+        match_metric=match_metric,
+        class_agnostic=class_agnostic,
+    )
+    return postprocess(data)
+
 def slice_image(predicted_image: PredictionResult, divider:str):
     # staffs will be sorted later
     sorted_staffs = filter_predictions(predicted_image.object_prediction_list, set([divider]))
 
     # merge staffs if there are intersections
-    postprocess = GreedyNMMPostprocess(
-        match_threshold=0.1,
-        match_metric="IOS",
-        class_agnostic=False,
-    )
+    # postprocess = GreedyNMMPostprocess(
+    #     match_threshold=0.1,
+    #     match_metric="IOS",
+    #     class_agnostic=False,
+    # )
 
     # sort vertically
     if len(sorted_staffs) > 1:
-        sorted_staffs = sorted(postprocess(sorted_staffs), key=cmp_to_key(compare_boxes_vertically))
+        sorted_staffs = sorted(postprocess(sorted_staffs, match_metric="IOS"), key=cmp_to_key(compare_boxes_vertically))
 
     # get slice bboxes each with only one staff
     lines = get_mid_lines(sorted_staffs)
