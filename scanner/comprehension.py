@@ -107,9 +107,11 @@ if __name__=="__main__":
 
 
     # Load test image and predictions
-    with open(r"someobject.pickle", "rb") as input_file:
+    pickle_test_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'test_data', "someobject.pickle")
+    with open(pickle_test_file, "rb") as input_file:
         predictions = pickle.load(input_file)
-    image = cv2.imread('test_img.png')
+    image_test_file = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'test_data', "test_img.png")
+    image = cv2.imread(image_test_file)
     sorted_predictions = sorted(predictions, key=cmp_to_key(detector.compare_boxes_horizontally))
     processed = detector.postprocess(sorted_predictions, match_metric="IOS", match_threshold=0.004)
     sorted_processed = sorted(processed, key=cmp_to_key(detector.compare_boxes_horizontally))
@@ -123,6 +125,7 @@ if __name__=="__main__":
     generated_kern = comrehend(sorted_processed)
 
     filename = "kern_code.krn"
+    filename = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'test_data', filename)
     save_kern(generated_kern, filename)
 
     # view generated kern_file
