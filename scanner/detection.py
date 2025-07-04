@@ -2,7 +2,7 @@ from sahi.predict import get_sliced_prediction
 from sahi.prediction import PredictionResult, ObjectPrediction
 from sahi.postprocess.combine import GreedyNMMPostprocess
 from sahi.utils.cv import visualize_object_predictions
-from yolo10_sahi_detection_model import Yolov10DetectionModel
+from scanner.yolo10_sahi_detection_model import Yolov10DetectionModel
 import torch
 import numpy as np
 import os
