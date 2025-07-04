@@ -2,6 +2,7 @@ from sahi.predict import get_sliced_prediction
 from sahi.prediction import PredictionResult, ObjectPrediction
 from sahi.postprocess.combine import GreedyNMMPostprocess
 from sahi.utils.cv import visualize_object_predictions
+from sahi.annotation import BoundingBox
 from scanner.yolo10_sahi_detection_model import Yolov10DetectionModel
 import torch
 import numpy as np
@@ -138,8 +139,18 @@ def prediction_inside_slice(prediction: ObjectPrediction, slice_bbox: List[int])
     return True
 
 def transform_prediction(prediction: ObjectPrediction, slice_bbox: List[int]):
-    prediction.bbox.miny = prediction.bbox.miny - slice_bbox[1]
-    prediction.bbox.maxy = prediction.bbox.maxy - slice_bbox[1]    
+    # prediction.bbox.miny = prediction.bbox.miny - slice_bbox[1]
+    # prediction.bbox.maxy = prediction.bbox.maxy - slice_bbox[1]    
+    bbox = prediction.bbox
+    # construct a new bbox object
+    new_bbox = BoundingBox(
+        [bbox.minx,
+        bbox.miny - slice_bbox[1],
+        bbox.maxx,
+        bbox.maxy - slice_bbox[1]]
+    )
+    prediction.bbox = new_bbox
+
 
 def postprocess(data, match_threshold=0.1, match_metric="IOU", class_agnostic=False):
     postprocess = GreedyNMMPostprocess(
